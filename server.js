@@ -19,6 +19,10 @@ app.get("/api/board", (req, res, next) => {
     res.send(game.exportJson());
 });
 
+app.get("/api/test", (req, res, next) => {
+    res.send("test test test");
+});
+
 app.post("/api/newgame", (req, res, next) => {
     const game = new Board();
     let game_id = uuidv4();
