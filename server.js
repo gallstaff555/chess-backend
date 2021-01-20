@@ -52,7 +52,8 @@ app.get("/profile", requiresAuth(), (req, res) => {
 });
 
 app.get("/api/newgame", (req, res, next) => {
-    res.send(moves(NEW_GAME_BOARD_CONFIG));
+    //res.send(moves(NEW_GAME_BOARD_CONFIG));
+    res.json(moves(NEW_GAME_BOARD_CONFIG));
 });
 
 app.get("/api/move", (req, res, next) => {
