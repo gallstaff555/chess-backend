@@ -2,9 +2,14 @@
 const express = require("express");
 const http = require("http");
 const app = express();
+const cors = require("cors");
 const bodyParser = require("body-parser");
 
 //setup middleware
+
+//CORS set up
+app.use(cors());
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -21,6 +26,9 @@ server.listen(PORT, () => {
 import { Game, move, status, moves, aiMove, getFen } from "./chess-engine/js-chess-engine.mjs";
 import { NEW_GAME_BOARD_CONFIG } from "./chess-engine/const/board.mjs";
 
+//const { chess } = require('./chess.js');
+//const chess = new Chess();
+
 //auth0 set up
 const { auth } = require("express-openid-connect");
 const { requiresAuth } = require("express-openid-connect");
@@ -36,13 +44,6 @@ const config = {
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
-
-//CORS set up
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
 
 app.get("/", (req, res, next) => {
     res.send("Welcome to muggle chess");
@@ -71,6 +72,16 @@ app.get("/api/validate", (req, res, next) => {
     res.send({ "result": true });
 });
 
+//Returns the updated board state after a given move is calculated
+app.post("/api/move", (req, res, next) => {
+    try {
+        let updatedFen = move(req.body.fen, req.body.moveFrom.toUpperCase(), req.body.moveTo.toUpperCase());
+        res.send(getFen(updatedFen));
+    } catch (err) {
+        res.send(req.body.fen);
+    }
+});
+
 //return new board state after AI makes a move
 app.post("/api/aimove", (req, res, next) => {
     let boardState = req.body.boardState;
@@ -80,31 +91,3 @@ app.post("/api/aimove", (req, res, next) => {
     let updatedBoard = move(boardState, from, to);
     res.send(getFen(updatedBoard));
 });
-
-/*Graveyard
-//return new board configuration (in FEN notation) after given move is applied
-//NOTE: this does not yet implement validation
-app.get("/api/move", (req, res, next) => {
-    let updatedBoard = req.body.boardConfiguration;
-    //TODO add validation
-    res.send(updatedBoard);
-});
-
-app.get("/api/status", (req, res, next) => {
-    res.send(status(req.body.boardConfiguration));
-});
-
-app.get("/api/aimove", (req, res, next) => {
-    // aiMove(boardConfiguration, level = 2) - Return computed move
-    // as an object like {"H7":"H5"}.
-    // Use move(yourBoardConfiguration, from, to) to play this move.
-});
-
-app.post("/api/fen", (req, res, next) => {
-    res.send(getFEN(req.body.boardConfiguration));
-});
-
-app.post("/api/moves", (req, res, next) => {
-    res.send(moves(req.body));
-});
-*/
