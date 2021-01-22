@@ -71,6 +71,16 @@ app.get("/api/validate", (req, res, next) => {
     res.send({ "result": true });
 });
 
+//return new board state after AI makes a move
+app.post("/api/aimove", (req, res, next) => {
+    let boardState = req.body.boardState;
+    let ai = aiMove(boardState, 2);
+    let from = Object.keys(ai)[0];
+    let to = ai[from];
+    let updatedBoard = move(boardState, from, to);
+    res.send(getFen(updatedBoard));
+});
+
 /*Graveyard
 //return new board configuration (in FEN notation) after given move is applied
 //NOTE: this does not yet implement validation
@@ -97,5 +107,4 @@ app.post("/api/fen", (req, res, next) => {
 app.post("/api/moves", (req, res, next) => {
     res.send(moves(req.body));
 });
-
 */
