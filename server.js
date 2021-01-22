@@ -2,6 +2,13 @@
 const express = require("express");
 const http = require("http");
 const app = express();
+const bodyParser = require("body-parser");
+
+//setup middleware
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+//app.use(router..) should be the last thing called
 
 const server = http.createServer(app);
 const PORT = process.env.PORT || 4001;
@@ -11,9 +18,8 @@ server.listen(PORT, () => {
 });
 
 //import on-the-fly chess game functions
-import { Game, move, status, moves, aiMove } from "./chess-engine/js-chess-engine.mjs";
+import { Game, move, status, moves, aiMove, getFen } from "./chess-engine/js-chess-engine.mjs";
 import { NEW_GAME_BOARD_CONFIG } from "./chess-engine/const/board.mjs";
-console.log(moves(NEW_GAME_BOARD_CONFIG));
 
 //auth0 set up
 const { auth } = require("express-openid-connect");
@@ -51,21 +57,31 @@ app.get("/profile", requiresAuth(), (req, res) => {
     res.send(JSON.stringify(req.oidc.user));
 });
 
+//***Chess specific API: ***
+
+//return a new game configuration in FEN notation
 app.get("/api/newgame", (req, res, next) => {
-    //res.send(moves(NEW_GAME_BOARD_CONFIG));
-    res.json(moves(NEW_GAME_BOARD_CONFIG));
+    res.send(getFen(NEW_GAME_BOARD_CONFIG));
 });
 
+//TODO add saved games from db
+
+//TODO add validation logic
+app.get("/api/validate", (req, res, next) => {
+    res.send({ "result": true });
+});
+
+/*Graveyard
+//return new board configuration (in FEN notation) after given move is applied
+//NOTE: this does not yet implement validation
 app.get("/api/move", (req, res, next) => {
-    res.send(move(req.body.boardConfiguration, req.body.from, req.body.to));
+    let updatedBoard = req.body.boardConfiguration;
+    //TODO add validation
+    res.send(updatedBoard);
 });
 
 app.get("/api/status", (req, res, next) => {
     res.send(status(req.body.boardConfiguration));
-});
-
-app.get("/api/moves", (req, res, next) => {
-    res.send(moves(req.body.boardConfiguration));
 });
 
 app.get("/api/aimove", (req, res, next) => {
@@ -73,3 +89,13 @@ app.get("/api/aimove", (req, res, next) => {
     // as an object like {"H7":"H5"}.
     // Use move(yourBoardConfiguration, from, to) to play this move.
 });
+
+app.post("/api/fen", (req, res, next) => {
+    res.send(getFEN(req.body.boardConfiguration));
+});
+
+app.post("/api/moves", (req, res, next) => {
+    res.send(moves(req.body));
+});
+
+*/
