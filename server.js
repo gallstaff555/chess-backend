@@ -8,15 +8,23 @@ const bodyParser = require("body-parser");
 
 //CORS set up
 const cors = require("cors");
-app.options("*", cors());
-app.use(
-    cors({
-        origin: true,
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "OPTIONS", "DELETE", "HEAD"],
-    })
-);
+app.use(cors());
 //app.options("*", cors());
+// app.use(
+//     cors({
+//         origin: true,
+//         credentials: true,
+//         methods: ["GET", "POST", "PUT", "OPTIONS", "DELETE", "HEAD"],
+//     })
+// );
+//app.options("*", cors());
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "https://gallstaff555.github.io/muggle-chess-client/");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Credentials", true);
+});
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -77,7 +85,9 @@ app.get("/api/newgame", (req, res, next) => {
 //Returns the updated board state after a given move is calculated
 app.post("/api/move", (req, res, next) => {
     console.log(`New board state: ${req.body.fen}`);
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    // res.header("Access-Control-Allow-Origin", "https://gallstaff555.github.io");
+    // res.header("Access-Control-Allow-Credentials", true);
+    // res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    // res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
     res.sendStatus(200);
 });
