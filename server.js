@@ -4,12 +4,11 @@ const http = require("http");
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const auth0Config = require("./config/config");
 
 //setup middleware
 
 //CORS set up
-app.use(cors());
+//app.use(cors());
 app.options("*", cors());
 
 app.use(express.json());
@@ -37,6 +36,15 @@ const { requiresAuth } = require("express-openid-connect");
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 //
+const auth0Config = {
+    authRequired: false,
+    auth0Logout: true,
+    secret: "a long, randomly-generated string stored in env",
+    baseURL: "http://localhost:3000",
+    clientID: "55ZMdiGL5bT0Y3M7OA3r5uQAQgcmJBR7",
+    issuerBaseURL: "https://dev-490elg7s.us.auth0.com",
+};
+
 app.use(auth(auth0Config));
 
 app.get("/", (req, res, next) => {
