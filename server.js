@@ -9,7 +9,13 @@ const bodyParser = require("body-parser");
 //CORS set up
 const cors = require("cors");
 app.options("*", cors());
-app.use(cors({ origin: true, credentials: true }));
+app.use(
+    cors({
+        origin: true,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "OPTIONS", "DELETE", "HEAD"],
+    })
+);
 //app.options("*", cors());
 
 app.use(express.json());
