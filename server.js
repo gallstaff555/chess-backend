@@ -2,14 +2,15 @@
 const express = require("express");
 const http = require("http");
 const app = express();
-const cors = require("cors");
-const bodyParser = require("body-parser");
 
 //setup middleware
+const bodyParser = require("body-parser");
 
 //CORS set up
-//app.use(cors());
+const cors = require("cors");
 app.options("*", cors());
+app.use(cors({ origin: true, credentials: true }));
+//app.options("*", cors());
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
