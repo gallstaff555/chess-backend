@@ -12,7 +12,7 @@ const cors = require("cors");
 let allowedOrigins = [
     "https://gallstaff555.github.io/muggle-chess-client/",
     "https://gallstaff555.github.io/",
-    "http://localhost:4001",
+    "http://localhost:3000",
 ];
 
 app.use(
