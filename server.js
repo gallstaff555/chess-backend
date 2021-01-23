@@ -35,6 +35,7 @@ const { auth } = require("express-openid-connect");
 const { requiresAuth } = require("express-openid-connect");
 
 // auth router attaches /login, /logout, and /callback routes to the baseURL
+//
 app.use(auth(auth0Config));
 
 app.get("/", (req, res, next) => {
