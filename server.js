@@ -77,4 +77,7 @@ app.get("/api/newgame", (req, res, next) => {
 //Returns the updated board state after a given move is calculated
 app.post("/api/move", (req, res, next) => {
     console.log(`New board state: ${req.body.fen}`);
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    res.sendStatus(200);
 });
