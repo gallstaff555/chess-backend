@@ -10,6 +10,7 @@ const auth0Config = require("./config/config");
 
 //CORS set up
 app.use(cors());
+app.options("*", cors());
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
