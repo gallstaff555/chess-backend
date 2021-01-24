@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/api/newgame", (req, res, next) => {
-    res.send(getFen(NEW_GAME_BOARD_CONFIG));
+    res.send("new game");
 });
 
 //Returns the updated board state after a given move is calculated

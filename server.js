@@ -11,7 +11,7 @@ const bodyParser = require("body-parser");
 //CORS set up
 const cors = require("cors");
 
-let allowedOrigins = ["https://muggle-chess.netlify.app/", "http://localhost:3000"];
+let allowedOrigins = ["https://muggle-chess.netlify.app", "http://localhost:3000"];
 
 app.use(
     cors({
