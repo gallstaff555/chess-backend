@@ -2,8 +2,8 @@
 const express = require("express");
 const http = require("http");
 const app = express();
+const config = require("./config/config");
 const chessRoutes = require("./routes/chessRoutes");
-const userRoutes = require("./routes/usersRoutes");
 
 //setup middleware
 const bodyParser = require("body-parser");
@@ -20,7 +20,9 @@ app.use(
             // (like mobile apps or curl requests)
             if (!origin) return callback(null, true);
             if (allowedOrigins.indexOf(origin) === -1) {
-                var msg = "The CORS policy for this site does not " + "allow access from the specified Origin.";
+                var msg =
+                    "\n Custom error: The CORS policy for this site does not " +
+                    "allow access from the specified Origin.";
                 return callback(new Error(msg), false);
             }
             return callback(null, true);
@@ -29,7 +31,7 @@ app.use(
 );
 
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://muggle-chess.netlify.app"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Origin", `${config.allowOrigin.url}`); // "https://muggle-chess.netlify.app" update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
@@ -40,7 +42,6 @@ app.use(bodyParser.json());
 
 //Routes
 app.use("/", chessRoutes);
-app.use("/", userRoutes);
 
 app.get("/", (req, res, next) => {
     res.send("Welcome to muggle chess");
